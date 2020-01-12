@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import battlecode.common.*;
-import battlecode.world.control.PlayerControlProvider;
+
 public class Global {
 	public static final RobotType[] buildingtype= {RobotType.HQ,RobotType.DESIGN_SCHOOL,RobotType.FULFILLMENT_CENTER,RobotType.REFINERY,RobotType.NET_GUN,RobotType.VAPORATOR};
 	public static RobotController rc;
