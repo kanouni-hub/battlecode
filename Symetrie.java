@@ -52,22 +52,21 @@ public class Symetrie extends RobotPlayer{
 		MapLocation hprime = new MapLocation(xprime,yprime);
 		return hprime ;}
 		
-	public int Checksymetrie(MapLocation h) {
+	public boolean FindHQ(MapLocation h) {
 			
 			
 			MapLocation[] Possible = {verticale(h), horizantal(h),Diagonale(h),InvDiagonale(h)};
 			for(MapLocation u : Possible) {
-				Astar.s = u ;
-				try {
-					Astar.RAstar();
+					try {
+					Pathfind.going(u);
 				} catch (GameActionException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				 c=+1;
+				
 				try {
 					if ( (rc.senseRobotAtLocation(u)).getType()==RobotType.HQ){
-						 a=c;
+						 
 						 break;
 						}} catch (GameActionException e) {
 					// TODO Auto-generated catch block
@@ -76,6 +75,6 @@ public class Symetrie extends RobotPlayer{
 			}
 		
 		
-			return a ;}
+			return true ;}
 
 }
