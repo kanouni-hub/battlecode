@@ -129,7 +129,7 @@ public class Miner extends Global {
 	MapLocation[] h =rc.senseNearbySoup();
 	 while(h.length == 0) {
 			
-		moving();
+		
 		
 		maxdist=carre[Math.min(Math.min(radius,width-myloc.x-1),height-myloc.y-1)];
 		myloc=rc.getLocation();
@@ -150,7 +150,7 @@ public class Miner extends Global {
 		if(myloc.directionTo(trypath.get(trypath.size()-1))!=forwarddir) {
 			memdir++;
 		}else {memdir=0;}
-		}}
+		}moving();}
 	
 	//Minning until get max soup then going to hq  
 	public static void Mine() throws GameActionException {
