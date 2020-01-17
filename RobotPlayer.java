@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import battlecode.common.*;
 import battlecode.world.control.PlayerControlProvider;
 
-public strictfp class RobotPlayer {
+public strictfp class RobotPlayer extends Global {
     static RobotController rc;
     static int currentsqurad;
     static int rad;
     static int width;
     static int height;
-    static int[] racine= {1,2,2,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7};
     static Direction[] directions = {
         Direction.NORTH,
         Direction.NORTHEAST,
@@ -21,6 +20,7 @@ public strictfp class RobotPlayer {
         Direction.WEST,
         Direction.NORTHWEST
     };
+    
     static int squaredrad;
     static RobotType[] spawnedByMiner = {RobotType.REFINERY, RobotType.VAPORATOR, RobotType.DESIGN_SCHOOL,
             RobotType.FULFILLMENT_CENTER, RobotType.NET_GUN};
@@ -73,27 +73,31 @@ public strictfp class RobotPlayer {
     }
 
     static void runHQ() throws GameActionException {
-        
-            while(!tryBuild(RobotType.MINER, Direction.NORTH)) {}
-            while(!tryBuild(RobotType.MINER, Direction.SOUTHEAST)) {}
+    	
+   
+    	while( !tryBuild(RobotType.MINER,Direction.EAST)) {}
+    	while( !tryBuild(RobotType.MINER,Direction.NORTH)) {}
+    	 while(!tryBuild(RobotType.MINER,Direction.WEST)) {}
+    	 while(!tryBuild(RobotType.MINER,Direction.SOUTH)) {}
+        while(true) {}
     }
-
     static void runMiner() throws GameActionException {
-    	Nav.first();
-    	
-    	
-    	while(true) {
-    	if(rc.canMove(Direction.NORTH)) {
-    		rc.move(Direction.NORTH);
-    		Nav.moved();
- }
-    	System.out.println(Global.soup);
-		 System.out.println(Clock.getBytecodesLeft());
-		 Clock.yield();
+    	System.out.println("round"+rc.getRoundNum());
+    	if(rc.getRoundNum()==2) {
+    		Nav.updateRobot(rc.senseNearbyRobots());
+    		Symetrie.FindHQ(myHQ);
+    		while(rc.getTeamSoup()<150) {}
+    		Buildbaby.landscaperkill();
+    		int c =5;
+    		while(c==5){};
     	}
-        
-       
-    }
+    	
+    	else {
+    		Nav.first();}
+    	
+    	}
+    	
+    
 
     static void runRefinery() throws GameActionException {
         // System.out.println("Pollution: " + rc.sensePollution(rc.getLocation()));
@@ -288,5 +292,7 @@ public strictfp class RobotPlayer {
     		   System.out.println("*****  "+Clock.getBytecodesLeft());  
     		   Clock.yield();
     	            }
+    
+
     
 }
