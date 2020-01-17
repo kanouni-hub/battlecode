@@ -77,23 +77,19 @@ public strictfp class RobotPlayer extends Global {
    
     	while( !tryBuild(RobotType.MINER,Direction.EAST)) {}
     	while( !tryBuild(RobotType.MINER,Direction.NORTH)) {}
-    	 while(!tryBuild(RobotType.MINER,Direction.WEST)) {}
-    	 while(!tryBuild(RobotType.MINER,Direction.SOUTH)) {}
+    	
         while(true) {}
     }
     static void runMiner() throws GameActionException {
     	System.out.println("round"+rc.getRoundNum());
     	if(rc.getRoundNum()==2) {
     		Nav.updateRobot(rc.senseNearbyRobots());
-    		Symetrie.FindHQ(myHQ);
     		while(rc.getTeamSoup()<150) {}
-    		Buildbaby.landscaperkill();
+    		Buildbaby.landscaperwall();
     		int c =5;
     		while(c==5){};
     	}
-    	
-    	else {
-    		Nav.first();}
+    
     	
     	}
     	
@@ -292,7 +288,5 @@ public strictfp class RobotPlayer extends Global {
     		   System.out.println("*****  "+Clock.getBytecodesLeft());  
     		   Clock.yield();
     	            }
-    
-
     
 }
