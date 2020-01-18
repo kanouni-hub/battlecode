@@ -1,5 +1,4 @@
-package examplefuncsplayer;
-
+package test;
 import java.util.ArrayList;
 
 import battlecode.common.*;
@@ -12,9 +11,10 @@ public class Miner extends Global {
 	private static ArrayList<MapLocation> visited=new ArrayList<MapLocation>();
 	private static ArrayList<MapLocation> visited1=new ArrayList<MapLocation>();
 
-	
+	private static int autochng=0;
+	private static int failnbr=0;
+
 	private static int memdir=0;
-	//functions for try first
 	public static ArrayList<MapLocation> decidemoveHQ(MapLocation i) {
 		ArrayList<MapLocation> childrens=getchildforward(i);
 		ArrayList<MapLocation> maxi=new ArrayList<MapLocation>();
@@ -46,13 +46,12 @@ public class Miner extends Global {
 	
 	
 	public static void moving() {
-		int c=0;
 		MapLocation last=trypath.get(trypath.size()-1);
-		while(trypath.size()!=0) {
-		System.out.println("byte moving "+Clock.getBytecodesLeft());
+		while(trypath.size()!=0 && rc.senseNearbySoup().length==0) {
 		if(rc.canMove(myloc.directionTo(trypath.get(0)))) {
 			try {
 				rc.move(myloc.directionTo(trypath.get(0)));
+				failnbr=0;
 			} catch (GameActionException e) {
 				System.out.println(e.getMessage());
 				e.printStackTrace();
@@ -60,30 +59,21 @@ public class Miner extends Global {
 			squaredradius=rc.getCurrentSensorRadiusSquared();
 			radius=racine[squaredradius];					
 			myloc=rc.getLocation();
-			System.out.println(rc.getRoundNum()+" bytcode "+Clock.getBytecodesLeft());
 			
-			System.out.println("update map "+rc.getCurrentSensorRadiusSquared());
-			System.out.println("rayon "+radius);
-			Nav.moved();
-			//Nav.updatemap();
-			System.out.println("update map "+rc.getCurrentSensorRadiusSquared());
-			System.out.println("rayon "+radius);
-			
-			System.out.println(rc.getRoundNum()+" byt 2 "+Clock.getBytecodesLeft());
+		
 
 			trypath.remove(0);
 			
-			Clock.yield();
 		}else if(rc.isReady()) {
-			memdir++;
-			if(memdir>2) {
+			failnbr++;
+			if(failnbr>1) {
+				changecheckdir();
 				break;
 			}
 			
-			Clock.yield();
-		}else {
-		Clock.yield();
 		}
+		Clock.yield();
+		
 		}
 		visited.add(last);
 	}
@@ -105,11 +95,11 @@ public class Miner extends Global {
 
 	
 	public static void changecheckdir() {
-		if(memdir==10) {memdir=0;}
-		if(memdir<6) {memdir++;
+		if(memdir>=16) {memdir=0;}
+		if(memdir<9) {memdir++;
 		forwarddir=checkdir[1];			
 		}else {memdir++;
-		forwarddir=checkdir[2];		
+		forwarddir=checkdir[2];	
 		}
 		checkdir[0]=forwarddir;  checkdir[1]=forwarddir.rotateLeft();  checkdir[2]=forwarddir.rotateRight();
 		checkdir[3]=checkdir[1].rotateLeft();    checkdir[4]=checkdir[2].rotateRight();
@@ -128,29 +118,36 @@ public class Miner extends Global {
 	
 	MapLocation[] h =rc.senseNearbySoup();
 	 while(h.length == 0) {
+		 h =rc.senseNearbySoup();
+			maxdist=carre[Math.min(Math.min(radius,width-myloc.x-1),height-myloc.y-1)];
+			myloc=rc.getLocation();
+			if(!rc.canSenseLocation(myloc.translate(3*forwarddir.getDeltaX(), 3*forwarddir.getDeltaY())) ) {
+				changecheckdir();
+				memdir --;
+				System.out.println("chng ln60 out map ");
 			
-		
-		
-		maxdist=carre[Math.min(Math.min(radius,width-myloc.x-1),height-myloc.y-1)];
-		myloc=rc.getLocation();
-		if(!rc.canSenseLocation(myloc.translate(3*forwarddir.getDeltaX(), 3*forwarddir.getDeltaY())) ||memdir>1) {
-			changecheckdir();
-	
-		}
-		trypath=decidemoveHQ(myloc);
-		visited1.clear();
-		trypath.remove(0);
-		while(trypath.size()==0) {
-			changecheckdir();
-
+			}
 			trypath=decidemoveHQ(myloc);
 			visited1.clear();
 			trypath.remove(0);
+			if(trypath.size()==0) {
+				changecheckdir();
+				trypath=decidemoveHQ(myloc);
+				visited1.clear();
+				trypath.remove(0);
+				continue;
+			}
+			if(myloc.directionTo(trypath.get(trypath.size()-1))!=forwarddir) {
+				memdir++;
+			}
+			moving();
+			autochng++;
+			if(autochng>6) {
+				changecheckdir();
+				autochng=0;
+			}
+			}
 		}
-		if(myloc.directionTo(trypath.get(trypath.size()-1))!=forwarddir) {
-			memdir++;
-		}else {memdir=0;}
-		}moving();}
 	
 	//Minning until get max soup then going to hq  
 	public static void Mine() throws GameActionException {
@@ -167,12 +164,10 @@ public class Miner extends Global {
 			if(rc.canMineSoup(dir)) {
 				try {
 					rc.mineSoup(dir);
-					System.out.println("minning soup"+rc.getSoupCarrying());
 				} catch (GameActionException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}}else {
-					System.out.println("cnt min in "+dir);
 				}
 		}
 			
@@ -216,4 +211,3 @@ public class Miner extends Global {
 		getsoup();
 	}
 }
-	
