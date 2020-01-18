@@ -1,4 +1,4 @@
-package examplefuncsplayer;
+package test;
 
 import java.util.LinkedList;
 
@@ -6,7 +6,7 @@ import battlecode.common.*;
 
 public class Pathfind extends Global{
 
-	static boolean going(MapLocation goal) throws GameActionException {
+	public static boolean going(MapLocation goal) throws GameActionException {
 		System.out.println("going to "+goal);
 		int nbrpas=0;
 		myloc=rc.getLocation();
@@ -24,7 +24,7 @@ public class Pathfind extends Global{
 		int co=0;
 		while(!rc.getLocation().isAdjacentTo(goal)) {
 		myloc=rc.getLocation();
-		Direction forward=myloc.directionTo(goal);
+		Direction forward=dirto(goal);
 		while(!rc.isReady()) {}
 		if(co!=5 && rc.canMove(forward) && !visited3.contains(myloc.translate(forward.getDeltaX(),forward.getDeltaY())) && !rc.senseFlooding(myloc.translate(forward.getDeltaX(),forward.getDeltaY()))) {
 			moved=true;
@@ -82,4 +82,32 @@ public class Pathfind extends Global{
 		}
 		return true;
 	}
+	static Direction dirto(MapLocation goal) {
+		myloc=rc.getLocation();
+		Direction nor=myloc.directionTo(goal);
+		if(nor.getDeltaX()*nor.getDeltaY()!=0) {
+			return nor;
+		}
+		if(myloc.x==goal.x ||myloc.y==goal.y) {
+			return nor;
+		}
+		if(myloc.x>goal.x) {
+			if(myloc.y>goal.y) {
+				nor=Direction.SOUTHWEST;
+			}
+			else {nor=Direction.NORTHWEST;
+		}
+			}else {
+				if(myloc.y>goal.y) {
+					nor=Direction.SOUTHEAST;
+				}
+				else {nor=Direction.NORTHEAST;
+			}
+		}
+		return nor;
+	}
+	
+	
+
 }
+
