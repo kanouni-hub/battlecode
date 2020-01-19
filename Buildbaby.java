@@ -2,6 +2,7 @@ package examplefuncsplayer;
 import battlecode.common.*;
 public class Buildbaby extends Global {
 	public static void landscaperkill() throws GameActionException {
+		int moved=0;
 		for(int i=0;i<3;i++) {
 		MapLocation me = rc.getLocation();
 		Direction dir =me.directionTo(opHQ);
@@ -13,6 +14,7 @@ public class Buildbaby extends Global {
 			Clock.yield();
 			if(rc.canBuildRobot(RobotType.DESIGN_SCHOOL, dir.opposite())) {
 				rc.buildRobot(RobotType.DESIGN_SCHOOL, dir.opposite());
+				break;
 				
 				}
 	}
@@ -22,15 +24,26 @@ public class Buildbaby extends Global {
 			MapLocation h1 = me1.add(u);
 				if(rc.canMove(u)&&!rc.senseFlooding(h1)){
 					rc.move(u);
+					 moved=+1;
 						Clock.yield();
+						if(moved==2) {
 						if(rc.canBuildRobot(RobotType.DESIGN_SCHOOL, u)) {
 							rc.buildRobot(RobotType.DESIGN_SCHOOL, u);
 							break ;
 							}
+						else{
+							for(Direction u1 : Direction.allDirections()) {
+								if(rc.canBuildRobot(RobotType.DESIGN_SCHOOL, u1)) {
+									rc.buildRobot(RobotType.DESIGN_SCHOOL, u1);
+									break ;}
+							}
+						break;}
+						
 				}
 			}
 		
 		}
+	break;}
 	}
 	}
 	public static void landscaperwall() throws GameActionException {
