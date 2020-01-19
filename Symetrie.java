@@ -55,7 +55,7 @@ public class Symetrie extends RobotPlayer{
 	public static boolean FindHQ(MapLocation h) {
 			
 			
-			MapLocation[] Possible = {verticale(h), Diagonale(h),horizantal(h),horizantal(verticale(h))};
+			MapLocation[] Possible = {verticale(h), horizantal(verticale(h)),horizantal(h),Diagonale(h)};
 			for(MapLocation u : Possible) {
 				System.out.println("u "+u);
 				try {
@@ -66,10 +66,11 @@ public class Symetrie extends RobotPlayer{
 					e1.printStackTrace();
 				}
 				
-				try {
+				try { 
 					if ( (rc.senseRobotAtLocation(u))!=null){
 						if(rc.senseRobotAtLocation(u).getType()==RobotType.HQ && rc.senseRobotAtLocation(u).getTeam()!=rc.getTeam()) {
 							opHQ=u;
+							System.out.println("ennemy HQ"+opHQ);
 							break ;
 						}}
 				
@@ -83,4 +84,3 @@ public class Symetrie extends RobotPlayer{
 			return true ;}
 
 }
-
