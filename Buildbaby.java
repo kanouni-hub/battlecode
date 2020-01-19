@@ -16,7 +16,22 @@ public class Buildbaby extends Global {
 				
 				}
 	}
+		else {
+			for(Direction u : Direction.allDirections()) {
+			MapLocation me1 = rc.getLocation();	
+			MapLocation h1 = me1.add(u);
+				if(rc.canMove(u)&&!rc.senseFlooding(h1)){
+					rc.move(u);
+						Clock.yield();
+						if(rc.canBuildRobot(RobotType.DESIGN_SCHOOL, u)) {
+							rc.buildRobot(RobotType.DESIGN_SCHOOL, u);
+							break ;
+							}
+				}
+			}
+		
 		}
+	}
 	}
 	public static void landscaperwall() throws GameActionException {
 		MapLocation me = rc.getLocation();
@@ -121,4 +136,59 @@ public class Buildbaby extends Global {
 		}
 	}
 	}
-}
+	
+		
+	public static void fullcenter() throws GameActionException {
+		
+	
+		MapLocation me = rc.getLocation();
+		MapLocation u = myHQ.translate(3,1);
+		if(rc.canSenseLocation(u)) {
+			if(rc.senseRobotAtLocation(u)==null && !rc.senseFlooding(u)) {
+				Pathfind.going(u);
+				if(rc.canBuildRobot(RobotType.FULFILLMENT_CENTER, me.directionTo(u))) {
+					rc.buildRobot(RobotType.FULFILLMENT_CENTER, me.directionTo(u));
+					Clock.yield();
+					return;
+				
+			}
+		}
+	}
+		MapLocation u1 = myHQ.translate(1,3);
+		if(rc.canSenseLocation(u1)) {
+			if(rc.senseRobotAtLocation(u1)==null && !rc.senseFlooding(u1)) {
+				Pathfind.going(u1);
+				MapLocation me1 = rc.getLocation();
+				if(rc.canBuildRobot(RobotType.FULFILLMENT_CENTER, me1.directionTo(u1))) {
+					rc.buildRobot(RobotType.FULFILLMENT_CENTER, me1.directionTo(u1));
+					Clock.yield();
+					return;
+			}
+		}
+	}
+		MapLocation u11 = myHQ.translate(1,-3);
+		if(rc.canSenseLocation(u11)) {
+			if(rc.senseRobotAtLocation(u11)==null && !rc.senseFlooding(u11)) {
+				Pathfind.going(u11);
+				MapLocation me2 = rc.getLocation();
+				if(rc.canBuildRobot(RobotType.FULFILLMENT_CENTER, me2.directionTo(u11))) {
+					rc.buildRobot(RobotType.FULFILLMENT_CENTER, me2.directionTo(u11));
+					Clock.yield();
+					return;
+			}
+		}
+	}
+		
+		MapLocation u2 = myHQ.translate(-3,1);
+		if(rc.canSenseLocation(u2)) {
+			if(rc.senseRobotAtLocation(u2)==null && !rc.senseFlooding(u2)) {
+				Pathfind.going(u2);
+				MapLocation me3 = rc.getLocation();
+				if(rc.canBuildRobot(RobotType.FULFILLMENT_CENTER, me3.directionTo(u2))) {
+					rc.buildRobot(RobotType.FULFILLMENT_CENTER, me3.directionTo(u2));
+					Clock.yield();
+					return;
+			}
+		}
+	}
+	}}
