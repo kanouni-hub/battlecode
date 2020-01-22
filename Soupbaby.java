@@ -1,4 +1,3 @@
-package test;
 import battlecode.common.*;
 
 public class Soupbaby extends Global {
@@ -38,7 +37,7 @@ public static void Mine() throws GameActionException {
 				if(rc.canDepositSoup(futurdir)) {
 					rc.depositSoup(futurdir,rc.getSoupCarrying());
 					
-				}
+				}}
 				else{
 					if(rc.canBuildRobot(RobotType.REFINERY,myHQ.directionTo(rc.getLocation()))) {
 						rc.buildRobot(RobotType.REFINERY,myHQ.directionTo(rc.getLocation()));
@@ -61,7 +60,7 @@ public static void Mine() throws GameActionException {
 					
 					
 				}
-				}
+				
 				}return;
 					
 			} 
@@ -73,4 +72,10 @@ public static void Mine() throws GameActionException {
 		
 				
 		
+	public static void getsoup() throws GameActionException {
+		Miner.firstmove();
+		Mine();	
+	getsoup();}
+		
+	
 }
