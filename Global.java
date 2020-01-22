@@ -24,7 +24,8 @@ public class Global {
 	public static Hashtable<MapLocation,RobotType> opbuild=new Hashtable<MapLocation,RobotType>();
 	public static MapLocation myHQ;
 	public static MapLocation opHQ=null;
-	
+	public static MapLocation  refinery=null;
+	public static int pr=0;
 	public static ArrayList<MapLocation> trypath;
 	
 	
