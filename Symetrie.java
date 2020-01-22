@@ -1,4 +1,4 @@
-package examplefuncsplayer;
+package test;
 import battlecode.common.*;
 
 public class Symetrie extends RobotPlayer{
@@ -51,36 +51,47 @@ public class Symetrie extends RobotPlayer{
 		
 		MapLocation hprime = new MapLocation(xprime,yprime);
 		return hprime ;}
+	public static MapLocation [] Allsymetries(MapLocation u) {
+		MapLocation[] h =  {verticale(u), horizantal(verticale(u)),horizantal(u),Diagonale(u)};
+		return h;
+	}
 		
-	public static boolean FindHQ(MapLocation h) {
+	public static boolean FindHQ(MapLocation h) throws GameActionException {
 			
 			
 			MapLocation[] Possible = {verticale(h), horizantal(verticale(h)),horizantal(h),Diagonale(h)};
 			for(MapLocation u : Possible) {
 				System.out.println("u "+u);
-				try {
-					Pathfind.going(u);
-					System.out.println("myHQ" +u);
-				} catch (GameActionException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				
-				try { 
+					if(!Pathfind.going(u)) {
+					System.out.println("HQ not found" +u);
+						MapLocation me= rc.getLocation();
+						int d = me.distanceSquaredTo(u);
+						if(d<=rc.getCurrentSensorRadiusSquared()) {
+							if ( (rc.senseRobotAtLocation(u))!=null){
+								if(rc.senseRobotAtLocation(u).getType()==RobotType.HQ && rc.senseRobotAtLocation(u).getTeam()!=rc.getTeam()) {
+									opHQ=u;
+									Message.broadcastennemyHQ();
+									System.out.println("ennemy HQ"+opHQ);
+									break ;}	
+								}
+						}
+					}
+				else {	
 					if ( (rc.senseRobotAtLocation(u))!=null){
 						if(rc.senseRobotAtLocation(u).getType()==RobotType.HQ && rc.senseRobotAtLocation(u).getTeam()!=rc.getTeam()) {
 							opHQ=u;
+							Message.broadcastennemyHQ();
 							System.out.println("ennemy HQ"+opHQ);
 							break ;
 						}}
 				
-						} catch (GameActionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();}
-				
+						
+					}
 			}
 		
 		
 			return true ;}
+
 
 }
