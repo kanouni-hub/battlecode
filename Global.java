@@ -26,6 +26,9 @@ public class Global {
 	public static MapLocation opHQ=null;
 	public static MapLocation  refinery=null;
 	public static int pr=0;
+	public static int build = 0;
+	public static int urgent =0;
+	public static int design = 0 ;
 	public static ArrayList<MapLocation> trypath;
 	
 	
