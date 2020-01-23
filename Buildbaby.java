@@ -1,41 +1,55 @@
-package examplefuncsplayer;
+package test;
 import battlecode.common.*;
 public class Buildbaby extends Global {
 	public static void landscaperkill() throws GameActionException {
 		int moved=0;
-		for(int i=0;i<3;i++) {
+		 Direction  dir = rc.getLocation().directionTo(opHQ) ;
+		for(int i=0;i<2;i++) {
+			while(!rc.isReady()) {Clock.yield();}
 		MapLocation me = rc.getLocation();
-		Direction dir =me.directionTo(opHQ);
+		 dir =me.directionTo(opHQ);
 		System.out.println("direction"+dir.opposite());
 		MapLocation h = me.add(dir.opposite());
 		System.out.println("location:" +h);
 		if(rc.canMove(dir.opposite())&&!rc.senseFlooding(h)){
+			System.out.println("i can move");
 		rc.move(dir.opposite());
-			Clock.yield();
+			Clock.yield();}}
+		while(rc.getTeamSoup()<150) {Clock.yield();}
+		while(!rc.isReady()) {Clock.yield();}
+		System.out.println("first tring "+rc.getTeamSoup()+"d "+dir.opposite());
 			if(rc.canBuildRobot(RobotType.DESIGN_SCHOOL, dir.opposite())) {
+				System.out.println("building");
 				rc.buildRobot(RobotType.DESIGN_SCHOOL, dir.opposite());
-				break;
+				return;
 				
 				}
-	}
+	
 		else {
+			System.out.println("else");
 			for(Direction u : Direction.allDirections()) {
+				while(!rc.isReady()) {Clock.yield();}
 			MapLocation me1 = rc.getLocation();	
 			MapLocation h1 = me1.add(u);
 				if(rc.canMove(u)&&!rc.senseFlooding(h1)){
+					System.out.println("i can walk");
 					rc.move(u);
 					 moved=+1;
-						Clock.yield();
-						if(moved==2) {
+					 while(!rc.isReady()) {Clock.yield();}
+						if(moved>=2) {
+							while(rc.getTeamSoup()<150) {Clock.yield();}
+							System.out.println("sec tring "+u);
 						if(rc.canBuildRobot(RobotType.DESIGN_SCHOOL, u)) {
 							rc.buildRobot(RobotType.DESIGN_SCHOOL, u);
-							break ;
+							return ;
 							}
 						else{
 							for(Direction u1 : Direction.allDirections()) {
+								while(rc.getTeamSoup()<150) {Clock.yield();}
+								System.out.println("thrd tring "+u1);
 								if(rc.canBuildRobot(RobotType.DESIGN_SCHOOL, u1)) {
 									rc.buildRobot(RobotType.DESIGN_SCHOOL, u1);
-									break ;}
+									return ;}
 							}
 						break;}
 						
@@ -43,61 +57,39 @@ public class Buildbaby extends Global {
 			}
 		
 		}
-	break;}
+	return;}
 	}
-	}
+	
 	public static void landscaperwall() throws GameActionException {
 		MapLocation me = rc.getLocation();
-		MapLocation u = myHQ.translate(3,0);
-		System.out.println("u"+u);
-		if(rc.canSenseLocation(u)) {
-			Pathfind.going(u);
-			if(rc.senseRobotAtLocation(u)==null &&!rc.senseFlooding(u)) {
-				if(rc.canBuildRobot(RobotType.DESIGN_SCHOOL, me.directionTo(u))) {
-					rc.buildRobot(RobotType.DESIGN_SCHOOL, me.directionTo(u));
+		MapLocation[] u = { myHQ.translate(3,0), myHQ.translate(0,3),myHQ.translate(0,-3), myHQ.translate(-3,0)};
+		for(MapLocation h:u) {
+			System.out.println("trying "+h);
+			while(!rc.isReady()) {Clock.yield();}
+		if(rc.canSenseLocation(h)) {
+			if(Pathfind.going(h)) {
+				while(rc.getTeamSoup()<150) {Clock.yield();}
+			if(rc.senseRobotAtLocation(h)==null &&!rc.senseFlooding(h)) {
+				if(rc.canBuildRobot(RobotType.DESIGN_SCHOOL, me.directionTo(h))) {
+					rc.buildRobot(RobotType.DESIGN_SCHOOL, me.directionTo(h));
 					Clock.yield();
 					return;
 			}
 		}
 	}
-		MapLocation u1 = myHQ.translate(0,3);
-		if(rc.canSenseLocation(u1)) {
-			if(rc.senseRobotAtLocation(u1)==null && !rc.senseFlooding(u1)) {
-				Pathfind.going(u1);
-				MapLocation me1 = rc.getLocation();
-				if(rc.canBuildRobot(RobotType.DESIGN_SCHOOL, me1.directionTo(u1))) {
-					rc.buildRobot(RobotType.DESIGN_SCHOOL, me1.directionTo(u1));
-					Clock.yield();
-					return;
-					
-			}
-		}
+			
+		}	
 	}
-		MapLocation u11 = myHQ.translate(0,-3);
-		if(rc.canSenseLocation(u11)) {
-			if(rc.senseRobotAtLocation(u11)==null && !rc.senseFlooding(u11)) {
-				Pathfind.going(u11);
-				MapLocation me2 = rc.getLocation();
-				if(rc.canBuildRobot(RobotType.DESIGN_SCHOOL, me2.directionTo(u11))) {
-					rc.buildRobot(RobotType.DESIGN_SCHOOL, me2.directionTo(u11));
-					Clock.yield();
-					return;
-			}
+		for(Direction ds:Direction.allDirections()) {
+			while(rc.getTeamSoup()<150) {Clock.yield();}
+			if(rc.canBuildRobot(RobotType.DESIGN_SCHOOL, ds)) {
+				rc.buildRobot(RobotType.DESIGN_SCHOOL, ds);
+				Clock.yield();
+				return;
 		}
+		}
+
 	}
-		
-		MapLocation u2 = myHQ.translate(-3,0);
-		if(rc.canSenseLocation(u2)) {
-			if(rc.senseRobotAtLocation(u2)==null && !rc.senseFlooding(u2)) {
-				Pathfind.going(u2);
-				MapLocation me3 = rc.getLocation();
-				if(rc.canBuildRobot(RobotType.DESIGN_SCHOOL, me3.directionTo(u2))) {
-					rc.buildRobot(RobotType.DESIGN_SCHOOL, me3.directionTo(u2));
-					Clock.yield();
-					return;
-			}
-		}
-	}}
 		
 	public static void netdefence() throws GameActionException {
 		
@@ -105,8 +97,11 @@ public class Buildbaby extends Global {
 		MapLocation me = rc.getLocation();
 		MapLocation u = myHQ.translate(4,0);
 		if(rc.canSenseLocation(u)) {
+			
 			if(rc.senseRobotAtLocation(u)==null && !rc.senseFlooding(u)) {
 				Pathfind.going(u);
+				me=rc.getLocation();
+				while(rc.getTeamSoup()<150) {Clock.yield();}
 				if(rc.canBuildRobot(RobotType.NET_GUN, me.directionTo(u))) {
 					rc.buildRobot(RobotType.NET_GUN, me.directionTo(u));
 					Clock.yield();
@@ -119,6 +114,7 @@ public class Buildbaby extends Global {
 			if(rc.senseRobotAtLocation(u1)==null && !rc.senseFlooding(u1)) {
 				Pathfind.going(u1);
 				MapLocation me1 = rc.getLocation();
+				while(rc.getTeamSoup()<150) {Clock.yield();}
 				if(rc.canBuildRobot(RobotType.NET_GUN, me1.directionTo(u1))) {
 					rc.buildRobot(RobotType.NET_GUN, me1.directionTo(u1));
 					Clock.yield();
@@ -130,6 +126,7 @@ public class Buildbaby extends Global {
 			if(rc.senseRobotAtLocation(u11)==null && !rc.senseFlooding(u11)) {
 				Pathfind.going(u11);
 				MapLocation me2 = rc.getLocation();
+				while(rc.getTeamSoup()<150) {Clock.yield();}
 				if(rc.canBuildRobot(RobotType.NET_GUN, me2.directionTo(u11))) {
 					rc.buildRobot(RobotType.NET_GUN, me2.directionTo(u11));
 					Clock.yield();
@@ -142,6 +139,7 @@ public class Buildbaby extends Global {
 			if(rc.senseRobotAtLocation(u2)==null && !rc.senseFlooding(u2)) {
 				Pathfind.going(u2);
 				MapLocation me3 = rc.getLocation();
+				while(rc.getTeamSoup()<150) {Clock.yield();}
 				if(rc.canBuildRobot(RobotType.NET_GUN, me3.directionTo(u2))) {
 					rc.buildRobot(RobotType.NET_GUN, me3.directionTo(u2));
 					Clock.yield();
@@ -159,6 +157,7 @@ public class Buildbaby extends Global {
 		if(rc.canSenseLocation(u)) {
 			if(rc.senseRobotAtLocation(u)==null && !rc.senseFlooding(u)) {
 				Pathfind.going(u);
+				while(rc.getTeamSoup()<150) {Clock.yield();}
 				if(rc.canBuildRobot(RobotType.FULFILLMENT_CENTER, me.directionTo(u))) {
 					rc.buildRobot(RobotType.FULFILLMENT_CENTER, me.directionTo(u));
 					Clock.yield();
@@ -172,6 +171,7 @@ public class Buildbaby extends Global {
 			if(rc.senseRobotAtLocation(u1)==null && !rc.senseFlooding(u1)) {
 				Pathfind.going(u1);
 				MapLocation me1 = rc.getLocation();
+				while(rc.getTeamSoup()<150) {Clock.yield();}
 				if(rc.canBuildRobot(RobotType.FULFILLMENT_CENTER, me1.directionTo(u1))) {
 					rc.buildRobot(RobotType.FULFILLMENT_CENTER, me1.directionTo(u1));
 					Clock.yield();
@@ -184,6 +184,7 @@ public class Buildbaby extends Global {
 			if(rc.senseRobotAtLocation(u11)==null && !rc.senseFlooding(u11)) {
 				Pathfind.going(u11);
 				MapLocation me2 = rc.getLocation();
+				while(rc.getTeamSoup()<150) {Clock.yield();}
 				if(rc.canBuildRobot(RobotType.FULFILLMENT_CENTER, me2.directionTo(u11))) {
 					rc.buildRobot(RobotType.FULFILLMENT_CENTER, me2.directionTo(u11));
 					Clock.yield();
@@ -197,6 +198,7 @@ public class Buildbaby extends Global {
 			if(rc.senseRobotAtLocation(u2)==null && !rc.senseFlooding(u2)) {
 				Pathfind.going(u2);
 				MapLocation me3 = rc.getLocation();
+				while(rc.getTeamSoup()<150) {Clock.yield();}
 				if(rc.canBuildRobot(RobotType.FULFILLMENT_CENTER, me3.directionTo(u2))) {
 					rc.buildRobot(RobotType.FULFILLMENT_CENTER, me3.directionTo(u2));
 					Clock.yield();
@@ -204,4 +206,36 @@ public class Buildbaby extends Global {
 			}
 		}
 	}
-	}}
+	}
+	public static void Vaporator() throws GameActionException {
+		MapLocation me = rc.getLocation();
+		MapLocation[] u = { me.translate(2,0), me.translate(0,2),me.translate(0,-2), me.translate(-2,0)};
+		for(MapLocation h:u) {
+			System.out.println("trying "+h);
+			while(!rc.isReady()) {Clock.yield();}
+		if(rc.canSenseLocation(h)) {
+			if(Pathfind.going(h)) {
+				while(rc.getTeamSoup()<500) {Clock.yield();}
+			if(rc.senseRobotAtLocation(h)==null &&!rc.senseFlooding(h)) {
+				if(rc.canBuildRobot(RobotType.VAPORATOR, me.directionTo(h))) {
+					rc.buildRobot(RobotType.VAPORATOR, me.directionTo(h));
+					Clock.yield();
+				
+			}
+		}
+	}
+			
+		}	
+	}
+		for(Direction ds:Direction.allDirections()) {
+			while(rc.getTeamSoup()<500) {Clock.yield();}
+			if(rc.canBuildRobot(RobotType.VAPORATOR, ds)) {
+				rc.buildRobot(RobotType.VAPORATOR, ds);
+				Clock.yield();
+				return;
+		}
+		}
+
+	}
+		
+	}
