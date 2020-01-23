@@ -147,6 +147,13 @@ public class Miner extends Global {
 				autochng=0;
 			}
 			}
+	 for(Direction u : Direction.allDirections()) {
+	 if(rc.canBuildRobot(RobotType.REFINERY,u )) {
+		 rc.buildRobot(RobotType.REFINERY,u);
+		 break;
+	 }
 		}
+	}
+	
 	
 }
