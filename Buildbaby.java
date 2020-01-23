@@ -34,7 +34,7 @@ public class Buildbaby extends Global {
 				if(rc.canMove(u)&&!rc.senseFlooding(h1)){
 					System.out.println("i can walk");
 					rc.move(u);
-					 moved=+1;
+					 moved++;
 					 while(!rc.isReady()) {Clock.yield();}
 						if(moved>=2) {
 							while(rc.getTeamSoup()<150) {Clock.yield();}
@@ -207,7 +207,7 @@ public class Buildbaby extends Global {
 		}
 	}
 	}
-	public static void Vaporator() throws GameActionException {
+	public static void Refinery() throws GameActionException {
 		MapLocation me = rc.getLocation();
 		MapLocation[] u = { me.translate(2,0), me.translate(0,2),me.translate(0,-2), me.translate(-2,0)};
 		for(MapLocation h:u) {
@@ -215,11 +215,15 @@ public class Buildbaby extends Global {
 			while(!rc.isReady()) {Clock.yield();}
 		if(rc.canSenseLocation(h)) {
 			if(Pathfind.going(h)) {
-				while(rc.getTeamSoup()<500) {Clock.yield();}
+				while(rc.getTeamSoup()<150) {Clock.yield();}
 			if(rc.senseRobotAtLocation(h)==null &&!rc.senseFlooding(h)) {
-				if(rc.canBuildRobot(RobotType.VAPORATOR, me.directionTo(h))) {
-					rc.buildRobot(RobotType.VAPORATOR, me.directionTo(h));
+				if(rc.canBuildRobot(RobotType.REFINERY, me.directionTo(h))) {
+					rc.buildRobot(RobotType.REFINERY, me.directionTo(h));
+					refinery=me.add(me.directionTo(h));
+					Message.broadcastrefinery();
 					Clock.yield();
+					break;
+					
 				
 			}
 		}
@@ -227,15 +231,7 @@ public class Buildbaby extends Global {
 			
 		}	
 	}
-		for(Direction ds:Direction.allDirections()) {
-			while(rc.getTeamSoup()<500) {Clock.yield();}
-			if(rc.canBuildRobot(RobotType.VAPORATOR, ds)) {
-				rc.buildRobot(RobotType.VAPORATOR, ds);
-				Clock.yield();
-				return;
-		}
-		}
-
+	
 	}
 		
 	}
