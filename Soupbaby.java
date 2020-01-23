@@ -39,7 +39,15 @@ public static void Mine() throws GameActionException {
 					rc.depositSoup(futurdir,rc.getSoupCarrying());
 					
 				}}
-				
+				else{
+					if(rc.canBuildRobot(RobotType.REFINERY,myHQ.directionTo(rc.getLocation()))) {
+						rc.buildRobot(RobotType.REFINERY,myHQ.directionTo(rc.getLocation()));
+						refinery = rc.adjacentLocation(myHQ.directionTo(rc.getLocation()));
+						Message.broadcastrefinery();
+					}
+					
+					
+					}
 				}
 				else {
 					Pathfind.going(refinery);
@@ -66,14 +74,9 @@ public static void Mine() throws GameActionException {
 				
 		
 	public static void getsoup() throws GameActionException {
-		Message.builtwall();
-		while(pr==0) {
 		Miner.firstmove();
 		Mine();	
 	getsoup();}
-	Buildbaby.netdefence();
-	getsoup();
-	
 		
-	}
+	
 }
