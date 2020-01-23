@@ -1,8 +1,8 @@
-package examplefuncsplayer;
+package test;
 import java.util.ArrayList;
 
 import battlecode.common.*;
-import battlecode.world.control.PlayerControlProvider;
+
 
 public strictfp class RobotPlayer extends Global {
     static RobotController rc;
@@ -49,7 +49,6 @@ public strictfp class RobotPlayer extends Global {
             	rad=racine[currentsqurad];
                 // Here, we've separated the controls into a different method for each RobotType.
                 // You can add the missing ones or rewrite this into your own control structure.
-                System.out.println("I'm a " + rc.getType() + "! Location " + rc.getLocation());
                 switch (rc.getType()) {
                     case HQ:                 runHQ();                break;
                     case MINER:              runMiner();             break;
@@ -73,23 +72,83 @@ public strictfp class RobotPlayer extends Global {
     }
 
     static void runHQ() throws GameActionException {
-    	
-   
-    	while( !tryBuild(RobotType.MINER,Direction.EAST)) {}
-    	while( !tryBuild(RobotType.MINER,Direction.NORTH)) {}
-    	
-        while(true) {}
-    }
-    static void runMiner() throws GameActionException {
-    	System.out.println("round"+rc.getRoundNum());
-    	if(rc.getRoundNum()==2) {
-    		Nav.updateRobot(rc.senseNearbyRobots());
-    		while(rc.getTeamSoup()<150) {}
-    		Buildbaby.landscaperwall();
-    		int c =5;
-    		while(c==5){};
-    	}
+    	Message.broadcastHQ();
     
+   while(!rc.isReady()) {Clock.yield();}
+    	while( !tryBuild(RobotType.MINER,Spawn.goodir())) {}
+    	
+    	   while(!rc.isReady()) {Clock.yield();}
+    	while( !tryBuild(RobotType.MINER,Spawn.goodir())) {}
+    	
+    	   while(!rc.isReady()) {Clock.yield();}
+    	   while(rc.getTeamSoup()<70) {Clock.yield();}
+    	while( !tryBuild(RobotType.MINER,Spawn.goodir())) {}
+    	
+    	while(!rc.isReady()) {Clock.yield();}
+ 	   while(rc.getTeamSoup()<70) {Clock.yield();}
+ 	while( !tryBuild(RobotType.MINER,Spawn.goodir())) {}
+ 	
+ 	while(!rc.isReady()) {Clock.yield();}
+	   while(rc.getTeamSoup()<70) {Clock.yield();}
+	while( !tryBuild(RobotType.MINER,Spawn.goodir())) {}
+	
+        while(true) {
+        Message.attackennemy();
+        Message.urgentmess() ;
+       Message.Coordination();
+       Message.getCoordination();
+       Message.Wall();
+       Message.builtwall();
+       	  if(build==1 && urgent==0 && pr==0) {
+       		  if(rc.canBuildRobot(RobotType.MINER, Spawn.goodir())) {
+       		  rc.buildRobot(RobotType.MINER, Spawn.goodir());
+       	  }}
+        	runNetGun();}
+        }
+    
+    static void runMiner() throws GameActionException {
+    	
+    	
+    	
+    	
+    	Message.HQLocation();
+    	Message.OpHQLocation();
+    	Message.urgentmess() ;
+    	if(rc.getRoundNum()==2) {
+    		Symetrie.FindHQ(myHQ);
+    		while(rc.getTeamSoup()<150) {Clock.yield();}
+    		if(urgent==0) {
+    		Buildbaby.landscaperkill();}
+    		if(opHQ!=null) {
+    			Pathfind.going(opHQ);
+    			if(rc.canBuildRobot(RobotType.NET_GUN, Spawn.goodir())) {
+    				rc.buildRobot(RobotType.NET_GUN, Spawn.goodir());
+    			}
+    			while(true) {Clock.yield();}
+    		}
+    	}
+   
+    	Nav.first();
+    	if((rc.getRoundNum()<13 && rc.getRoundNum()>6)) {
+    		Buildbaby.landscaperwall();
+    	}
+    	while(true) {
+    		Message.refineryLocation();
+    		Nav.first();
+    		
+    		Message.urgentmess();
+    		MapLocation land=Message.getdesign();
+    		if(design==1&&urgent==0) {
+    			Pathfind.going(land);
+    			if(rc.canBuildRobot(RobotType.DESIGN_SCHOOL, Spawn.goodir())) {
+    				rc.buildRobot(RobotType.DESIGN_SCHOOL, Spawn.goodir());
+    			}
+    			
+    		}
+    		if(refinery==null) {
+    			Buildbaby.Refinery();
+    		}
+    	}
     	
     	}
     	
@@ -104,37 +163,59 @@ public strictfp class RobotPlayer extends Global {
     }
 
     static void runDesignSchool() throws GameActionException {
-
+    
+    
+    	if(opHQ!=null) {
+    		int d=0;
+    		System.out.println("opHQ");
+    		while(d<3) {
+    		while(rc.getTeamSoup()<150) {Clock.yield();}
+    		for(Direction rob:Direction.allDirections()) {
+    		if(tryBuild(RobotType.LANDSCAPER, rob)) {
+    			d++;
+        	break;}}
+    	}}
+    	int i=0;
+    	
+    	while(true) {
+    		while(rc.getTeamSoup()<250) {Clock.yield();}
+    		for(Direction rob:Direction.allDirections()) {
+    		if(tryBuild(RobotType.LANDSCAPER, rob)) {
+    			i++;
+        	break;}
+        }if(i>7) {break;}
+    		}
+    	while(i>1) {Clock.yield();}
     }
 
     static void runFulfillmentCenter() throws GameActionException {
         for (Direction dir : directions)
-            tryBuild(RobotType.DELIVERY_DRONE, dir);
+           tryBuild(RobotType.DELIVERY_DRONE, dir);
     }
 
     static void runLandscaper() throws GameActionException {
-
+    	System.out.println("born2");
+    	LandScaper2.landscaperidle();
+    	System.out.println("end");
+while(true) {
+	System.out.println("finshed runlandscaper");
+}
     }
 
     static void runDeliveryDrone() throws GameActionException {
-        Team enemy = rc.getTeam().opponent();
-        if (!rc.isCurrentlyHoldingUnit()) {
-            // See if there are any enemy robots within striking range (distance 1 from lumberjack's radius)
-            RobotInfo[] robots = rc.senseNearbyRobots(GameConstants.DELIVERY_DRONE_PICKUP_RADIUS_SQUARED, enemy);
-
-            if (robots.length > 0) {
-                // Pick up a first robot within range
-                rc.pickUpUnit(robots[0].getID());
-                System.out.println("I picked up " + robots[0].getID() + "!");
-            }
-        } else {
-            // No close robots, so search for robots within sight radius
-            tryMove(randomDirection());
-        }
+    	Drone.droneassault();
+      
     }
 
     static void runNetGun() throws GameActionException {
-
+    	for(RobotInfo dr:rc.senseNearbyRobots(rc.getCurrentSensorRadiusSquared(),rc.getTeam().opponent())){
+    		if(dr.getType()==RobotType.DELIVERY_DRONE) {
+    			while(!rc.isReady()) {Clock.yield();}
+    			if(rc.canShootUnit(dr.getID())) {
+    				rc.shootUnit(dr.getID());
+    			}
+    		}
+    	}
     }
 
     /**
